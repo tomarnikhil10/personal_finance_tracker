@@ -1,18 +1,16 @@
+FROM php:8.2-apache
 
-# Use official PHP image
-FROM php:8.2-cli
+# Install mysqli and other dependencies
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# Set working directory inside the container
-WORKDIR /app
+# Enable Apache mod_rewrite if needed
+RUN a2enmod rewrite
 
-# Copy all project files into the container
-COPY . .
+# Copy your app into the container
+COPY . /var/www/html/
 
-# Install PHP extensions if needed (uncomment if using them)
-# RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Expose port
+EXPOSE 80
 
-# Expose port Render will connect to
-EXPOSE 10000
-
-# Start PHP's built-in development server
-CMD ["php", "-S", "0.0.0.0:10000"]
+# Start Apache
+CMD ["apache2-foreground"]
