@@ -1,24 +1,18 @@
 FROM php:8.2-apache
 
-# Install system dependencies and mysqli extension
+# Install dependencies and PostgreSQL driver
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-enable mysqli
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
 # Enable Apache rewrite module
 RUN a2enmod rewrite
 
-# Copy app files to the container
+# Copy your app into the container
 COPY . /var/www/html/
 
-# Expose port 80
+# Expose port
 EXPOSE 80
 
-# Start Apache server
+# Start Apache
 CMD ["apache2-foreground"]
